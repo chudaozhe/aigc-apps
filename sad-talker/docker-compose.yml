@@ -1,0 +1,26 @@
+version: "3.7"
+
+networks:
+  web-network:
+
+services:
+  sadtalker:
+    image: registry.cn-hangzhou.aliyuncs.com/cuiw/sadtalker:f044e14035916129b7ce17ec1d44d147a832c47c
+    volumes:
+      - ./data/gfpgan:/app/gfpgan
+      - ./data/checkpoints:/app/checkpoints
+      - ./output:/app/results
+#    entrypoint: ["python3", "launcher.py"]
+    ports:
+      - "7860:7860"
+    tty: true # 如果命令需要交互式终端，可以设置此选项
+    stdin_open: true # 如果命令需要保持stdin打开，可以设置此选项
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: "all"
+              capabilities: [ gpu ]
+    networks:
+      - web-network

@@ -1,0 +1,27 @@
+version: "3.4"
+
+services:
+  whisper-asr-webservice-gpu:
+    image: onerahmet/openai-whisper-asr-webservice:v1.3.0-gpu
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    environment:
+#     openai_whisper, faster_whisper
+      - ASR_ENGINE=openai_whisper
+#     tiny, base, small, medium, large (only OpenAI Whisper), large-v1, large-v2 and large-v3
+      - ASR_MODEL=large
+#     模型存储目录，默认/root/.cache/whisper
+#      - ASR_MODEL_PATH=/data/whisper
+    ports:
+      - "9000:9000"
+    volumes:
+#      - ./app:/app/app
+      - ./cache-pip:/root/.cache/pip
+      - ./cache-poetry:/root/.cache/poetry
+      - ./cache-whisper:/root/.cache/whisper
+
