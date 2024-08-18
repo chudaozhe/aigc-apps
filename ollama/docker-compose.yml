@@ -1,16 +1,30 @@
-version: "3.7"
+version: "3.9"
+networks:
+  ollama-network:
+
 services:
   ollama:
-    image: ollama/ollama:0.1.28
+    image: ollama/ollama:0.1.32
     container_name: ollama
     volumes:
       - ./data:/root/.ollama
-    restart: always
+    restart: unless-stopped
     ports:
       - "11434:11434"
+    environment:
+      - 'OLLAMA_DEBUG=1'
+    networks:
+      - ollama-network
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: "all"
+              capabilities: [ gpu ]
 
   open-webui:
-    image: ghcr.io/open-webui/open-webui:main
+    image: ghcr.io/open-webui/open-webui:0.1.119
     container_name: open-webui
     restart: unless-stopped
     ports:
@@ -24,3 +38,5 @@ services:
       - 'WEBUI_SECRET_KEY='
     extra_hosts:
       - host.docker.internal:host-gateway
+    networks:
+      - ollama-network
