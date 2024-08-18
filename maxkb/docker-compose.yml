@@ -1,0 +1,15 @@
+version: "3.9"
+networks:
+  ollama_ollama-network:
+    external: true
+services:
+  maxkb:
+    image: 1panel/maxkb:v0.9.1
+    container_name: maxkb
+    volumes:
+      - ./.maxkb:/var/lib/postgresql/data
+    restart: unless-stopped
+    ports:
+      - "8099:8080"
+    networks:
+      - ollama_ollama-network
