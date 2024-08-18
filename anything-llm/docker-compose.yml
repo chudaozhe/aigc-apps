@@ -1,0 +1,25 @@
+version: "3.9"
+
+networks:
+  web-network:
+
+services:
+  anything-llm:
+    container_name: anything-llm
+    image: mintplexlabs/anythingllm:latest
+    cap_add:
+      - SYS_ADMIN
+    volumes:
+      - "./.env:/app/server/.env"
+      - "./server/storage:/app/server/storage"
+      - "./collector/hotdir/:/app/collector/hotdir"
+      - "./collector/outputs/:/app/collector/outputs"
+    user: "${UID:-1000}:${GID:-1000}"
+    ports:
+      - "3011:3001"
+    env_file:
+      - .env
+    networks:
+      - web-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
