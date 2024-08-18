@@ -1,0 +1,19 @@
+services:
+  llava:
+    image: ashleykza/llava:1.4.6
+    restart: unless-stopped
+    ports:
+      - 3004:3001
+#      - 8888:8888
+#      - 2999:2999
+#      - 8080:8080
+    environment:
+      VENV_PATH: /workspace/venvs/llava
+    volumes:
+      - ./workspace:/workspace
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [gpu]
