@@ -1,0 +1,26 @@
+version: "3.7"
+
+networks:
+  web-network:
+
+services:
+  yolov8:
+    image: ultralytics/ultralytics:8.1.34
+    container_name: yolov8
+    volumes:
+      - ./data:/data
+      - ./output:/usr/src/ultralytics/examples/YOLOv8-Region-Counter/ultralytics_rc_output
+#    ports:
+#      - "7860:7860"
+    tty: true # 如果命令需要交互式终端，可以设置此选项
+    stdin_open: true # 如果命令需要保持stdin打开，可以设置此选项
+    ipc: host # 共享主机的IPC命名空间
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: "all"
+              capabilities: [ gpu ]
+    networks:
+      - web-network
